@@ -1,0 +1,22 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    env_file:
+      - ./.env
+    volumes:
+      - ./:/app
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 750M
+        reservations:
+          cpus: "0.125"
+          memory: 500M
+
+volumes:
+  pgdata:

@@ -1,4 +1,26 @@
 services:
+  postgres:
+    restart: always
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: buddy_pass
+      POSTGRES_DB: buddy_chat
+    volumes:
+      - ./pgdata:/var/lib/postgresql/
+    deploy:
+      resources:
+        limits:
+          cpus: "0.125"
+          memory: 350M
+        reservations:
+          cpus: "0.125"
+          memory: 100M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
   api:
     build:
       context: .
@@ -13,10 +35,18 @@ services:
       resources:
         limits:
           cpus: "0.25"
-          memory: 750M
+          memory: 500M
         reservations:
           cpus: "0.125"
-          memory: 500M
+          memory: 300M
+    healthcheck:
+      test: ["CMD-SHELL", "curl", "http://api:${API_PORT}"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   pgdata:

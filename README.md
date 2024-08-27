@@ -14,5 +14,5 @@
 
 Running this is very simple.
 
-* Rename the `.env.SAMPLE` to `.env` and update accordingly if you need.
+* Rename the `.env.example` to `.env` and update accordingly if you need.
 * Run `docker compose up --build -d`

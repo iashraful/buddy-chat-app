@@ -8,6 +8,7 @@ use core::db;
 use core::logging::LogManager;
 
 pub mod api;
+pub mod chat;
 pub mod core;
 
 #[tokio::main]
@@ -22,6 +23,6 @@ async fn main() {
     // Connecting to Postgres DB
     let conn_pool: Pool<Manager<PgConnection>> =
         db::establish_connection(config.db_url().to_string());
-    
+
     run_server(config, conn_pool).await;
 }

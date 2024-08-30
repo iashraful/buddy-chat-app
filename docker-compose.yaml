@@ -2,6 +2,8 @@ services:
   postgres:
     restart: always
     image: postgres:latest
+    ports:
+      - "${DB_EXPOSE_PORT}:5432"
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: buddy_pass

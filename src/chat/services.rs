@@ -1,15 +1,19 @@
-use axum::extract::ws::WebSocket;
+use axum::extract::ws::{Message, WebSocket};
+use futures::SinkExt;
+use futures::StreamExt;
 
-pub async fn handle_socket(mut socket: WebSocket) {
-    while let Some(msg) = socket.recv().await {
-        let msg = if let Ok(msg) = msg {
+pub async fn handle_socket(socket: WebSocket) {
+    let (mut sender, mut receiver) = socket.split();
+    while let Some(msg) = receiver.next().await {
+        if let Ok(msg) = msg {
+            println!("Message from client: {}", msg.clone().into_text().unwrap());
             msg
         } else {
             // client disconnected
             return;
         };
 
-        if socket.send(msg).await.is_err() {
+        if sender.send(Message::from("Test")).await.is_err() {
             // client disconnected
             return;
         }
